@@ -1,13 +1,11 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   IGuardian,
   ILocalGuardian,
   IStudent,
   StudentModel,
   IUserName,
-} from './student/student.interface';
-import config from '../config';
+} from './student.interface';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {
@@ -15,22 +13,11 @@ const userNameSchema = new Schema<IUserName>({
     required: [true, 'First name is required'],
     trim: true,
     maxlength: [20, 'Name can not be more than 20 characters.'],
-    // validate: {
-    //   validator: function (value: string) {
-    //     const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-    //     return firstNameStr === value;
-    //   },
-    //   message: '{VALUE} is not in capitalize format',
-    // },
   },
   middleName: { type: String },
   lastName: {
     type: String,
     required: [true, 'Last name is required'],
-    // validate: {
-    //   validator: (value: string) => validator.isAlpha(value),
-    //   message: '{VALUE} is not valid',
-    // },
   },
 });
 
@@ -81,11 +68,11 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       required: [true, 'Student ID is required'],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password at least 6 characters'],
-      maxlength: [20, 'Password cannot be more than 20 characters'],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: userNameSchema,
@@ -104,10 +91,6 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       type: String,
       required: [true, 'Email is required'],
       unique: true,
-      // validate: {
-      //   validator: (value: string) => validator.isEmail(value),
-      //   message: '{VALUE} is not valid',
-      // },
     },
     contactNo: {
       type: String,
@@ -140,7 +123,6 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
-    isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -151,26 +133,6 @@ const studentSchema = new Schema<IStudent, StudentModel>(
 // virtual
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-
-// pre save middleware / hook : will work on create() / save()
-studentSchema.pre('save', async function (next) {
-  // console.log(this, 'Pre hook: we will save the data');
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; //doc
-
-  // hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bycrypt_salt_round),
-  );
-  next();
-});
-
-// post save middleware / hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // Query Middleware
@@ -194,11 +156,5 @@ studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
-
-// creating custom instance method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Student.findOne({ id });
-//   return existingUser;
-// };
 
 export const Student = model<IStudent, StudentModel>('Student', studentSchema);
