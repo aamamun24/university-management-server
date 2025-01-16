@@ -86,7 +86,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       },
       required: [true, 'Gender is required'],
     },
-    dob: { type: String },
+    dob: { type: Date },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -123,6 +123,10 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
+    },
     isDeleted: { type: Boolean, default: false },
   },
   {

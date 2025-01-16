@@ -28,7 +28,7 @@ export interface IStudent {
   password: string;
   name: IUserName;
   gender: 'male' | 'female' | 'other';
-  dob?: string;
+  dob?: Date;
   email: string;
   contactNo: string;
   emergencyContact: string;
@@ -38,6 +38,7 @@ export interface IStudent {
   guardian: IGuardian;
   localGuardian: ILocalGuardian;
   profileImg?: string;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 }
 

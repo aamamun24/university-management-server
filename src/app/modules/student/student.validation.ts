@@ -43,33 +43,40 @@ const localGuardianValidationSchema = z.object({
 });
 
 // Zod schema for student
-const studentValidationSchema = z.object({
-  id: z.string().min(1, 'Student ID is required'),
-  password: z.string().min(6, 'Password at least 6 characters').max(20),
-  name: userNameValidationSchema,
-  gender: z.enum(['female', 'male', 'other'], {
-    errorMap: () => ({ message: 'Gender must be male, female, or other' }),
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(6, 'Password at least 6 characters').max(20),
+    student: z.object({
+      name: userNameValidationSchema,
+      gender: z.enum(['female', 'male', 'other'], {
+        errorMap: () => ({ message: 'Gender must be male, female, or other' }),
+      }),
+      dob: z.string().optional(),
+      email: z
+        .string()
+        .email('Invalid email format')
+        .min(1, 'Email is required'),
+      contactNo: z
+        .string()
+        .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid contact number format')
+        .min(1, 'Contact number is required'),
+      emergencyContact: z
+        .string()
+        .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid emergency contact number format')
+        .min(1, 'Emergency contact number is required'),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().min(1, 'Present address is required'),
+      permanentAddress: z.string().min(1, 'Permanent address is required'),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      admissionSemester: z.string(),
+      profileImg: z.string().url().optional(),
+    }),
   }),
-  dob: z.string().optional(),
-  email: z.string().email('Invalid email format').min(1, 'Email is required'),
-  contactNo: z
-    .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid contact number format')
-    .min(1, 'Contact number is required'),
-  emergencyContact: z
-    .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid emergency contact number format')
-    .min(1, 'Emergency contact number is required'),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
-    .optional(),
-  presentAddress: z.string().min(1, 'Present address is required'),
-  permanentAddress: z.string().min(1, 'Permanent address is required'),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  profileImg: z.string().url().optional(),
-  isActive: z.boolean().default(true),
-  isDeleted: z.boolean().default(false),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
