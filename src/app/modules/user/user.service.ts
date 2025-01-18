@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { IStudent } from '../student/student.interface';
@@ -5,6 +6,8 @@ import { Student } from '../student/student.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 import { generatedStudentId } from './user.utils';
+import AppError from '../../errors/AppError';
+import status from 'http-status';
 
 const createStudentIntoDB = async (password: string, payload: IStudent) => {
   // create a user object
@@ -21,20 +24,38 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
     payload.admissionSemester,
   );
 
-  // set generated ID
-  userData.id = await generatedStudentId(admissionSemester);
+  const session = await mongoose.startSession();
 
-  // create a user
-  const newUser = await User.create(userData);
+  try {
+    session.startTransaction();
+    // set generated ID
+    userData.id = await generatedStudentId(admissionSemester);
 
-  // create a student
-  if (Object.keys(newUser).length) {
+    // create a user (transaction -> 1)
+    const newUser = await User.create([userData], { session }); //array
+
+    // create a student
+    if (!newUser.length) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to create user');
+    }
     // set id, _id as user
-    payload.id = newUser.id;
-    payload.user = newUser._id; // reference id
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; // reference id
 
-    const newStudent = await Student.create(payload);
+    // create a student (transaction -> 2)
+    const newStudent = await Student.create([payload], { session });
+    if (!newStudent.length) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to create student');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return newStudent;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(status.BAD_REQUEST, 'Failed to create user');
   }
 };
 

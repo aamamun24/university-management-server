@@ -10,14 +10,13 @@ import {
 const userNameSchema = new Schema<IUserName>({
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
+    required: true,
     trim: true,
-    maxlength: [20, 'Name can not be more than 20 characters.'],
   },
   middleName: { type: String },
   lastName: {
     type: String,
-    required: [true, 'Last name is required'],
+    required: true,
   },
 });
 
@@ -25,39 +24,36 @@ const guardianSchema = new Schema<IGuardian>({
   fatherName: { type: String, required: [true, 'Father name is required'] },
   fatherOccupation: {
     type: String,
-    required: [true, 'Father occupation is required'],
+    required: true,
   },
   fatherContactNo: {
     type: String,
-    required: [true, 'Father contact number is required'],
-    match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'],
+    required: true,
   },
-  motherName: { type: String, required: [true, 'Mother name is required'] },
+  motherName: { type: String, required: true },
   motherOccupation: {
     type: String,
-    required: [true, 'Mother occupation is required'],
+    required: true,
   },
   motherContactNo: {
     type: String,
-    required: [true, 'Mother contact number is required'],
-    match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'],
+    required: true,
   },
 });
 
 const localGuardianSchema = new Schema<ILocalGuardian>({
-  name: { type: String, required: [true, 'Local guardian name is required'] },
+  name: { type: String, required: true },
   occupation: {
     type: String,
-    required: [true, 'Local guardian occupation is required'],
+    required: true,
   },
   contactNo: {
     type: String,
-    required: [true, 'Local guardian contact number is required'],
-    match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'],
+    required: true,
   },
   address: {
     type: String,
-    required: [true, 'Local guardian address is required'],
+    required: true,
   },
 });
 
@@ -86,7 +82,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       },
       required: [true, 'Gender is required'],
     },
-    dob: { type: Date },
+    dob: { type: String },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -95,12 +91,10 @@ const studentSchema = new Schema<IStudent, StudentModel>(
     contactNo: {
       type: String,
       required: [true, 'Contact number is required'],
-      match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'],
     },
     emergencyContact: {
       type: String,
       required: [true, 'Emergency contact number is required'],
-      match: [/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'],
     },
     bloodGroup: {
       type: String,
@@ -126,6 +120,10 @@ const studentSchema = new Schema<IStudent, StudentModel>(
     admissionSemester: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
     },
     isDeleted: { type: Boolean, default: false },
   },

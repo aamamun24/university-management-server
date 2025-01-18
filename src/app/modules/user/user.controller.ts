@@ -1,6 +1,6 @@
 import status from 'http-status';
 import { UserServices } from './user.service';
-import sendResponse from '../../utils/sendRespone';
+import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
 
 const createStudent = catchAsync(async (req, res) => {

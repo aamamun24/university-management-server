@@ -1,5 +1,5 @@
 import status from 'http-status';
-import sendResponse from '../../utils/sendRespone';
+import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
 import { AcademicSemesterServices } from './academicSemester.service';
 
@@ -35,7 +35,7 @@ const getSingleAcademicSemester = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Academic semester is retrieved succesfully',
+    message: 'Academic semester is retrieved successfully',
     data: result,
   });
 });
