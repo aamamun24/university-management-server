@@ -19,17 +19,17 @@ const academicDepartmentSchema = new Schema<IAcademicDepartment>(
   { timestamps: true },
 );
 
-academicDepartmentSchema.pre('save', async function (next) {
-  const isDepartmentExits = await AcademicDepartment.findOne({
-    name: this.name,
-  });
+// academicDepartmentSchema.pre('save', async function (next) {
+//   const isDepartmentExits = await AcademicDepartment.findOne({
+//     name: this.name,
+//   });
 
-  if (isDepartmentExits) {
-    throw new AppError(status.NOT_FOUND, 'This department already exit!');
-  }
+//   if (isDepartmentExits) {
+//     throw new AppError(status.NOT_FOUND, 'This department already exit!');
+//   }
 
-  next();
-});
+//   next();
+// });
 
 academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();

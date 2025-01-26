@@ -17,7 +17,7 @@ const findLastStudentId = async () => {
     })
     .lean();
 
-  //2030010001
+  //2030 01 0001
   return lastStudent?.id ? lastStudent.id : undefined;
 };
 
@@ -29,7 +29,7 @@ export const generatedStudentId = async (payload: IAcademicSemester) => {
   const lastStudentId = await findLastStudentId();
   // 2030 01 0001
   const lastStudentSemesterCode = lastStudentId?.substring(4, 6); // 01
-  const lastStudentYear = lastStudentId?.substring(0, 2); // 2030
+  const lastStudentYear = lastStudentId?.substring(0, 4); // 2030
   const currentSemesterCode = payload.code;
   const currentYear = payload.year;
 
