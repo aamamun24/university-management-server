@@ -82,7 +82,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       },
       required: [true, 'Gender is required'],
     },
-    dob: { type: String },
+    dateOfBirth: { type: String },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -92,7 +92,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       type: String,
       required: [true, 'Contact number is required'],
     },
-    emergencyContact: {
+    emergencyContactNo: {
       type: String,
       required: [true, 'Emergency contact number is required'],
     },

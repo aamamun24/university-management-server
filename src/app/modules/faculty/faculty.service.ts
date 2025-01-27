@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { FacultySearchableFields } from './faculty.constant';
-import { TFaculty } from './faculty.interface';
+import { IFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import AppError from '../../errors/AppError';
 import status from 'http-status';
@@ -11,7 +11,14 @@ import { User } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
-    Faculty.find().populate('user').populate('academicDepartment'),
+    Faculty.find()
+      .populate('user')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
     query,
   )
     .search(FacultySearchableFields)
@@ -27,12 +34,17 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id)
     .populate('user')
-    .populate('academicDepartment');
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
 
   return result;
 };
 
-const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
+const updateFacultyIntoDB = async (id: string, payload: Partial<IFaculty>) => {
   const { name, ...remainingFacultyData } = payload;
 
   const modifiedUpdatedData: Record<string, unknown> = {

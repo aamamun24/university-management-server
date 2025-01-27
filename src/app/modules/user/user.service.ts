@@ -12,10 +12,11 @@ import {
 } from './user.utils';
 import AppError from '../../errors/AppError';
 import status from 'http-status';
-import { TFaculty } from '../faculty/faculty.interface';
+import { IFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../faculty/faculty.model';
 import { Admin } from '../admin/admin.model';
+import { IAdmin } from '../admin/admin.interface';
 
 const createStudentIntoDB = async (password: string, payload: IStudent) => {
   // create a user object
@@ -69,7 +70,7 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
   }
 };
 
-const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
   // create a user object
   const userData: Partial<IUser> = {};
 
@@ -125,7 +126,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
-const createAdminIntoDB = async (password: string, payload: TFaculty) => {
+const createAdminIntoDB = async (password: string, payload: IAdmin) => {
   // create a user object
   const userData: Partial<IUser> = {};
 

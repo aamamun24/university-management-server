@@ -28,10 +28,10 @@ export interface IStudent {
   password: string;
   name: IUserName;
   gender: 'male' | 'female' | 'other';
-  dob?: string;
+  dateOfBirth?: string;
   email: string;
   contactNo: string;
-  emergencyContact: string;
+  emergencyContactNo: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;

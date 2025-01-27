@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { AdminSearchableFields } from './admin.constant';
-import { TAdmin } from './admin.interface';
+import { IAdmin } from './admin.interface';
 import { Admin } from './admin.model';
 import AppError from '../../errors/AppError';
 import status from 'http-status';
@@ -26,7 +26,7 @@ const getSingleAdminFromDB = async (id: string) => {
   return result;
 };
 
-const updateAdminIntoDB = async (id: string, payload: Partial<TAdmin>) => {
+const updateAdminIntoDB = async (id: string, payload: Partial<IAdmin>) => {
   const { name, ...remainingAdminData } = payload;
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -39,7 +39,7 @@ const updateAdminIntoDB = async (id: string, payload: Partial<TAdmin>) => {
     }
   }
 
-  const result = await Admin.findByIdAndUpdate({ id }, modifiedUpdatedData, {
+  const result = await Admin.findByIdAndUpdate(id, modifiedUpdatedData, {
     new: true,
     runValidators: true,
   });

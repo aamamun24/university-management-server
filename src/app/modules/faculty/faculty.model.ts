@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { FacultyModel, TFaculty, TUserName } from './faculty.interface';
+import { FacultyModel, IFaculty, TUserName } from './faculty.interface';
 import { BloodGroup, Gender } from './faculty.constant';
 
 const userNameSchema = new Schema<TUserName>({
@@ -21,7 +21,7 @@ const userNameSchema = new Schema<TUserName>({
   },
 });
 
-const facultySchema = new Schema<TFaculty, FacultyModel>(
+const facultySchema = new Schema<IFaculty, FacultyModel>(
   {
     id: {
       type: String,
@@ -96,13 +96,7 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
 
 // generating full name
 facultySchema.virtual('fullName').get(function () {
-  return (
-    this?.name?.firstName +
-    '' +
-    this?.name?.middleName +
-    '' +
-    this?.name?.lastName
-  );
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 // filter out deleted documents
@@ -127,4 +121,4 @@ facultySchema.statics.isUserExists = async function (id: string) {
   return existingUser;
 };
 
-export const Faculty = model<TFaculty, FacultyModel>('Faculty', facultySchema);
+export const Faculty = model<IFaculty, FacultyModel>('Faculty', facultySchema);

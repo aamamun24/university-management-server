@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { AdminModel, TAdmin, TUserName } from './admin.interface';
+import { AdminModel, IAdmin, TUserName } from './admin.interface';
 import { BloodGroup, Gender } from './admin.constant';
 
 const userNameSchema = new Schema<TUserName>({
@@ -21,7 +21,7 @@ const userNameSchema = new Schema<TUserName>({
   },
 });
 
-const adminSchema = new Schema<TAdmin, AdminModel>(
+const adminSchema = new Schema<IAdmin, AdminModel>(
   {
     id: {
       type: String,
@@ -91,13 +91,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
 
 // generating full name
 adminSchema.virtual('fullName').get(function () {
-  return (
-    this?.name?.firstName +
-    '' +
-    this?.name?.middleName +
-    '' +
-    this?.name?.lastName
-  );
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 // filter out deleted documents
@@ -122,4 +116,4 @@ adminSchema.statics.isUserExists = async function (id: string) {
   return existingUser;
 };
 
-export const Admin = model<TAdmin, AdminModel>('Admin', adminSchema);
+export const Admin = model<IAdmin, AdminModel>('Admin', adminSchema);
