@@ -17,7 +17,7 @@ export type TUserName = {
   lastName: string;
 };
 
-export type IFaculty = {
+export interface IFaculty {
   id: string;
   user: Types.ObjectId;
   designation: string;
@@ -33,7 +33,7 @@ export type IFaculty = {
   profileImg?: string;
   academicDepartment: Types.ObjectId;
   isDeleted: boolean;
-};
+}
 
 export interface FacultyModel extends Model<IFaculty> {
   isUserExists(id: string): Promise<IFaculty | null>;
