@@ -1,4 +1,4 @@
-import e, { Router } from 'express';
+import { Router } from 'express';
 import { CourseControllers } from './course.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { CourseValidations } from './course.validation';
